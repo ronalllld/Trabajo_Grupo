@@ -1,20 +1,20 @@
-using Microsoft.AspNetCore.Mvc;
-using Empresa.Context;
+﻿using Empresa.Context;
 using Empresa.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Empresa.Controllers
 {
     [ApiController]
 
     [Route("[controller]")]
-    public class Salario_Controller : ControllerBase
+    public class Seguro_Controller : ControllerBase
     {
 
-        private readonly ILogger<Salario_Controller> _logger;
-        
+        private readonly ILogger<Seguro_Controller> _logger;
+
         private readonly Aplication_Context _aplication_context;
-        public Salario_Controller(
-            ILogger<Salario_Controller> logger,
+        public Seguro_Controller(
+            ILogger<Seguro_Controller> logger,
 
 
             Aplication_Context aplication_context)
@@ -29,12 +29,12 @@ namespace Empresa.Controllers
         [Route("")]
         [HttpPost]
         public IActionResult Post(
-            [FromBody] Salario salario)
+            [FromBody] Sure seguro)
         {
-            _aplication_context.salario.Add(salario);
+            _aplication_context.Seguro.Add(seguro);
 
             _aplication_context.SaveChanges();
-            return Ok(salario);
+            return Ok(seguro);
 
         }
         /*Obtener lista*/
@@ -42,32 +42,34 @@ namespace Empresa.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_aplication_context.salario.ToList());
+            return Ok(_aplication_context.Seguro.ToList());
 
         }
         /*Modificar*/
-        [Route("/id")]
+        [Route("{id}")]
 
         [HttpPut]
         public IActionResult Put(
-            [FromBody] Salario salario)
+            [FromBody] Sure Seguro)
         {
-            _aplication_context.salario.Update(salario);
+            _aplication_context.Seguro.Update(Seguro);
             _aplication_context.SaveChanges();
 
-            return Ok(salario);
+            return Ok(Seguro);
         }
         /*Eliminar*/
-        [Route("/id")]
+        [Route("{id}")]
         [HttpDelete]
-        public IActionResult Delete(int idSalario)
+        public IActionResult Delete(int Id_seguro)
         {
-            _aplication_context.salario.Remove( _aplication_context.salario.ToList().Where(x => x.idSalario == idSalario)
+            _aplication_context.Seguro.Remove(
+                _aplication_context.Seguro.ToList()
+                .Where(x => x.Id_Sure == Id_seguro)
 
                 .FirstOrDefault());
             _aplication_context.SaveChanges();
 
-            return Ok(idSalario);
+            return Ok(Id_seguro);
         }
     }
 }
