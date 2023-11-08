@@ -1,108 +1,62 @@
-using empresa1.Context;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Linq;
+using WebApplication2.context;
+using WebApplication2.Models;
 
-namespace empresa1.Controllers
+namespace WebApplication2.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class DepartamentoController : ControllerBase
     {
         private readonly ILogger<DepartamentoController> _logger;
-        private readonly Aplication_Context _aplication_context;
-
+        private readonly AplicacionContexto _aplicacionContexto;
         public DepartamentoController(
             ILogger<DepartamentoController> logger,
-            Aplication_Context aplication_context)
+            AplicacionContexto aplicacionContexto)
         {
             _logger = logger;
-            _aplication_context = aplication_context;
+            _aplicacionContexto = aplicacionContexto;
         }
-
-        // Crear un nuevo departamento
+        //Create: Crear estudiantes
+        //[Route("")]
         [HttpPost]
-        public IActionResult Post([FromBody] Departamento departamento)
+        public IActionResult Post(
+            [FromBody] Departamento departamento)
         {
-            try
-            {
-                _aplication_context.departamento.Add(departamento);
-                _aplication_context.SaveChanges();
-                return Ok(departamento);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al crear departamento: {ex.Message}");
-                return StatusCode(500, "Error interno del servidor");
-            }
+            _aplicacionContexto.Departamentos.Add(departamento);
+            _aplicacionContexto.SaveChanges();
+            return Ok(departamento);
         }
-
-        // Obtener lista de departamentos
+        //READ: Obtener lista de estudiantes
+        //[Route("")]
         [HttpGet]
-        public IActionResult Get()
+
+        public IEnumerable<Departamento> Get()
         {
-            try
-            {
-                var departamentos = _aplication_context.departamento.ToList();
-                return Ok(departamentos);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al obtener la lista de departamentos: {ex.Message}");
-                return StatusCode(500, "Error interno del servidor");
-            }
+            return _aplicacionContexto.Departamentos.ToList();
         }
 
-        // Modificar un departamento por su ID
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Departamento departamento)
+        //Update: Modificar estudiantes
+        //[Route("/id")]
+        [HttpPut]
+        public IActionResult Put([FromBody] Departamento departamento)
         {
-            try
-            {
-                var existingDepartamento = _aplication_context.departamento.Find(id);
-                if (existingDepartamento == null)
-                {
-                    return NotFound(); // Departamento no encontrado
-                }
+            _aplicacionContexto.Departamentos.Update(departamento);
+            _aplicacionContexto.SaveChanges();
+            return Ok(departamento);
 
-                // Actualiza los campos del departamento existente con los valores proporcionados
-                existingDepartamento.Nombre = departamento.Nombre; // Reemplaza con los nombres de tus propiedades
-                existingDepartamento.Area = departamento.Area;
-
-                _aplication_context.departamento.Update(existingDepartamento);
-                _aplication_context.SaveChanges();
-
-                return Ok(existingDepartamento);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al modificar departamento: {ex.Message}");
-                return StatusCode(500, "Error interno del servidor");
-            }
         }
-
-        // Eliminar un departamento por su ID
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        //Delete: Eliminar estudiantes
+        //[Route("/id")]
+        [HttpDelete]
+        public IActionResult Delete(int departamentoID)
         {
-            try
-            {
-                var departamento = _aplication_context.departamento.Find(id);
-                if (departamento == null)
-                {
-                    return NotFound(); // Departamento no encontrado
-                }
-
-                _aplication_context.departamento.Remove(departamento);
-                _aplication_context.SaveChanges();
-
-                return Ok(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al eliminar departamento: {ex.Message}");
-                return StatusCode(500, "Error interno del servidor");
-            }
+            _aplicacionContexto.Departamentos.Remove(
+                _aplicacionContexto.Departamentos.ToList()
+                .Where(x => x.IdDepartamento == departamentoID)
+                .FirstOrDefault());
+            _aplicacionContexto.SaveChanges();
+            return Ok(departamentoID);
         }
     }
 }
