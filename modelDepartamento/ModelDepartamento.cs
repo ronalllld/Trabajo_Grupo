@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace empresa1.Context
+namespace WebApplication2.Models
 {
     public class Departamento
     {
         [Key]
-        public long IdDepartamento { get; set; }
+        public int IdDepartamento { get; set; }
         public string Nombre { get; set; }
         public string Area { get; set; }
-
 
     }
 }
